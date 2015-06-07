@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>#{root.title}</title>
+		<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, minimal-ui">
+    <link rel="apple-touch-icon-precomposed" href="/_dist/img/apple-touch-icon.png">
+    <link rel="icon" href="/_dist/img/icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="PerfLife">
+    <link rel="stylesheet" href="/_dist/css/all.css">
+	</head>
+	<body>
+		<div>This example will load the content below:</div>
+		<div data-fragment="content"></div>
+	</body>
+</html>
