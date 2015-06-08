@@ -1,0 +1,5 @@
+<% extend 'layouts/layout' %>
+<pre><%= JSON.stringify(this,null,4) %></pre>
+<% block 'content' : %>
+  <%= @message %>
+<% end %>

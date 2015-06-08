@@ -11,7 +11,14 @@
     <link rel="stylesheet" href="/_dist/css/all.css">
 	</head>
 	<body>
-		<div>This example will load the content below:</div>
+		<h5>Engine: Gaikan</h5>
+		<!-- header include broken, so included inline -->
+		<header class="site-header">
+		  <img class="logo" src="/_dist/img/apple-touch-icon.png" alt="PerfLife">
+		  <div class="container">
+		    <div class="inner"></div>
+		  </div>
+		</header>
 		<div data-fragment="content"></div>
 	</body>
 </html>

@@ -2,7 +2,11 @@
 
 var express = require('express');
 var path = require('path');
+// view engines:
 var gaikan = require('gaikan');
+var ECT = require('ect');
+var ejsEngine = require('ejs-locals');
+
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -13,14 +17,46 @@ var users = require('./routes/users');
 
 var app = express();
 
-// view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'jade');
+// test different view engines:
+switch (process.env.TEMPLATE) {
+  case 'JADE':
+    // jade view engine setup
+    app.set('views', path.join(__dirname, 'views'));
+    app.set('view engine', 'jade');
+    break;
 
-// Configure gaikan to use the layout.
-gaikan.options.layout = './views/layout.gaikan';
-app.engine('gaikan', gaikan);
-app.set('view engine', '.gaikan');
+  case 'GAIKAN':
+    // Configure gaikan to use the layout.
+    // NOTE: includes currently broken, can't solve with docs
+    gaikan.options.directories = ['views', '.'];
+    gaikan.options.extensions = ['gaikan', 'html'];
+    gaikan.options.layout = 'views/layouts/layout.gaikan';
+    app.engine('gaikan', gaikan);
+    app.set('view engine', '.gaikan');
+    break;
+
+  case 'ECT':
+    // configure ECT as the templating engine
+    var ectRenderer = new ECT({ watch: true, root: path.join(__dirname, '/views'), ext: '.ect' });
+    app.set('view engine', 'ect');
+    app.engine('ect', ectRenderer.render);
+    break;
+
+  case 'EJS':
+    // ejs view engine setup
+    // use ejs-locals for all ejs templates:
+    app.engine('ejs', ejsEngine);
+    app.set('views', path.join(__dirname, '/views'));
+    app.set('view engine', 'ejs'); // so you can render('index')
+    break;
+
+  default:
+    // ejs view engine setup
+    // use ejs-locals for all ejs templates:
+    app.engine('ejs', ejsEngine);
+    app.set('views', path.join(__dirname, '/views'));
+    app.set('view engine', 'ejs'); // so you can render('index')
+}
 
 
 // uncomment after placing your favicon in /public
