@@ -1,0 +1,18 @@
+<!-- complex.gaikan -->
+@{var hasPeople = root.data.length > 0;}
+<div data-if="hasPeople">
+  <table class="complex-table">
+    <div data-for="item in root.data">
+      <tr>
+        <td>!{item.name}</td>
+        <td>!{item.catchPhrase}</td>
+        <td>!{item.avatar}</td>
+        <td>!{item.image}</td>
+        <td>!{item.animal}</td>
+        <td>!{item.company}</td>
+      <tr>
+    </div>
+  </table>
+<div data-if="!hasPeople">
+  <p>List is empty</p>
+</div>

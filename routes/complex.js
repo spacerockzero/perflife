@@ -36,7 +36,6 @@ router.get('/new', function(req, res){
       animal: faker.image.animals(),
       catchPhrase: faker.company.catchPhrase(),
       company: faker.company.companyName()
-      // quote: faker.lorem.paragraphs()
     });
     i++;
   }

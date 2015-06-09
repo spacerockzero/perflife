@@ -1,5 +1,13 @@
 extends layouts/layout
 
 block content
-  -each item in data
-    p #{item.name} - #{item.catchPhrase}
+  - if (data.length > 0)
+    table
+      - each item in data
+        tr
+          td= item.name
+          td= item.catchPhrase
+          td= item.avatar
+          td= item.image
+          td= item.animal
+          td= item.company

@@ -21,10 +21,14 @@ var complex = require('./routes/complex');
 
 var app = express();
 
+// TODO: change this to detect node env
+var isProduction = false;
+
 // test different view engines:
 switch (process.env.TEMPLATE) {
   case 'JADE':
     // jade view engine setup
+    app.set('view options', { pretty: true }); //none of the other engines minify. this will keep the output equal
     app.set('views', path.join(__dirname, 'views'));
     app.set('view engine', 'jade');
     break;
@@ -33,6 +37,8 @@ switch (process.env.TEMPLATE) {
     // Configure gaikan to use the layout.
     // NOTE: includes currently broken, can't solve with docs
     gaikan.options.directories = ['views', '.'];
+    gaikan.options.enableCache = isProduction;
+    gaikan.options.enableCompression = isProduction;
     gaikan.options.extensions = ['gaikan', 'html'];
     gaikan.options.layout = 'views/layouts/layout.gaikan';
     app.engine('gaikan', gaikan);
@@ -87,7 +93,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
+    app.use(function(err, req, res) {
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
@@ -98,7 +104,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
