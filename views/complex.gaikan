@@ -1,7 +1,7 @@
 <!-- complex.gaikan -->
 @{var hasPeople = root.data.length > 0;}
 <div data-if="hasPeople">
-  <table class="complex-table">
+  <table>
     <div data-for="item in root.data">
       <tr>
         <td>!{item.name}</td>
