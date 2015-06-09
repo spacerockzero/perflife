@@ -1,9 +1,11 @@
+/* global caches, clients*/
+
 'use strict';
 
 require('serviceworker-cache-polyfill');
 
 
-var version = 'v1';
+var version = 'v2';
 var staticCacheName = 'people-static-' + version;
 
 
@@ -13,13 +15,13 @@ self.oninstall = function(event) {
   event.waitUntil(
     caches.open(staticCacheName).then(function(cache){
       return cache.addAll([
-        './',
-        '_dist/css/all.js',
-        '_dist/js/page.js',
-        '_dist/img/apple-touch-icon.png',
-        '_dist/img/icon.png'
+        '../',
+        './css/all.js',
+        './js/page.js',
+        './img/apple-touch-icon.png',
+        './img/icon.png'
       ]);
-    });
+    })
   );
 };
 
@@ -41,12 +43,12 @@ self.onactivate = function(event) {
     caches.keys().then(function(cacheNames) {
       return Promise.all(
         cacheNames.map(function(cacheName) {
-          if (/^people-/.test(cacheName) && expectedCaches.indexOf(cacheName) == -1) {
+          if (/^people-/.test(cacheName) && expectedCaches.indexOf(cacheName) === -1) {
             return caches.delete(cacheName);
           }
-        });
+        })
       );
-    });
+    })
   );
 };
 

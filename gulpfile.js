@@ -2,21 +2,29 @@
 
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
-
+var mergeStream = require('merge-stream');
+var buffer = require('vinyl-buffer');
+var runSequence = require('run-sequence');
+var source = require('vinyl-source-stream');
 // images bits
 // var imagemin = require('gulp-imagemin');
 // var pngquant = require('imagemin-pngquant');
 // var browserSync = require('browser-sync');
-
 // css bits
 var sass = require('gulp-sass');
-var watch = require('gulp-watch');
+// var watch = require('gulp-watch');
 var livereload = require('gulp-livereload');
-
 // browserify bits:
 var browserify = require('browserify');
+var watchify = require('watchify');
+// template bits
+var hbsfy = require('hbsfy');
 
 // var reload = browserSync.reload;
+
+gulp.task('clean', function (done) {
+  require('del')(['./assets/_dist'], done);
+});
 
 gulp.task('images', function(){
   return gulp.src('assets/img/*')
@@ -65,8 +73,8 @@ function createBundler(src) {
 }
 
 var bundlers = {
-  'js/page.js': createBundler('./src/js/page/index.js'),
-  'sw.js': createBundler('./src/js/sw/index.js')
+  'js/page.js': createBundler('./assets/js/page/index.js'),
+  'sw.js': createBundler('./assets/js/sw/index.js')
 };
 
 function bundle(bundler, outputPath) {
@@ -79,18 +87,42 @@ function bundle(bundler, outputPath) {
     .on('error', plugins.util.log.bind(plugins.util, 'Browserify Error'))
     .pipe(source(outputFile))
     .pipe(buffer())
-    .pipe(plugins.sourcemaps.init({ loadMaps: true })) // loads map from browserify file
-    .pipe(plugins.sourcemaps.write('./')) // writes .map file
-    .pipe(plugins.size({ gzip: true, title: outputFile }))
-    .pipe(gulp.dest('dist/' + outputDir))
-    .pipe(reload({ stream: true }));
+    // .pipe(plugins.sourcemaps.init({ loadMaps: true })) // loads map from browserify file
+    // .pipe(plugins.sourcemaps.write('./')) // writes .map file
+    // .pipe(plugins.size({ gzip: true, title: outputFile }))
+    .pipe(gulp.dest('./assets/_dist/' + outputDir));
+    // .pipe(reload({ stream: true }));
 }
+
+
+gulp.task('js', function () {
+  return mergeStream.apply(null,
+    Object.keys(bundlers).map(function(key) {
+      return bundle(bundlers[key], key);
+    })
+  );
+});
 
 
 gulp.task('watch', function(){
   livereload.listen();
-  watch('assets/css/**/*', function(){ gulp.start('css'); });
-  watch('assets/img/**/*', function(){ gulp.start('images'); });
+  gulp.watch(['assets/css/**/*'], ['css']);
+  gulp.watch(['assets/img/**/*'], ['images']);
+  gulp.watch(['assets/js/**/*'], ['js']);
+
+  // Object.keys(bundlers).forEach(function(key) {
+  //   var watchifyBundler = watchify(bundlers[key]);
+  //   watchifyBundler.on('update', function() {
+  //     return bundle(watchifyBundler, key);
+  //   });
+  //   bundle(watchifyBundler, key);
+  // });
+
 });
 
-gulp.task('default', ['images', 'css', 'watch']);
+
+gulp.task('build', function() {
+  return runSequence('clean', ['css', 'images', 'js']);
+});
+gulp.task('serve', ['build', 'watch']);
+gulp.task('default', ['build']);

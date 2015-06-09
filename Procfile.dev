@@ -1,2 +1,2 @@
 web: ./node_modules/.bin/nodemon ./bin/www
-gulp: gulp
+gulp: gulp serve
