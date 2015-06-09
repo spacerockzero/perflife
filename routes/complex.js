@@ -27,7 +27,7 @@ router.get('/new', function(req, res){
   console.time('getData');
   var newData = [];
   var i = 0;
-  var limit = 10000;
+  var limit = 5000;
   while(i < limit){
     newData.push({
       name: faker.name.findName(),
