@@ -1,5 +1,5 @@
 extends layouts/layout
 
 block content
-  | Complex page
-  
+  -each item in data
+    p #{item.name} - #{item.catchPhrase}

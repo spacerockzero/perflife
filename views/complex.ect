@@ -1,0 +1,10 @@
+<!-- complex.ect -->
+<% extend 'layouts/layout.ect' %>
+
+<% if @data?.length : %>
+  <% for item in @data : %>
+    <p><%- item.name %> - <%- item.catchPhrase %></p>
+  <% end %>
+<% else : %>
+  <p>List is empty</p>
+<% end %>

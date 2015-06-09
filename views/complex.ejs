@@ -1,0 +1,12 @@
+<!-- complex.ejs -->
+<% layout('layouts/layout') %>
+
+<% if(data.length) { %>
+  <table>
+    <% data.forEach(function(item) { %>
+      <tr><td><%- item.name %></td><td><%- item.catchPhrase %></td><tr>
+    <% }) %>
+  </table>
+<% } else { %>
+  <p>List is empty</p>
+<% } %>
