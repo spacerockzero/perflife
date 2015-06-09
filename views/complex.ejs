@@ -2,9 +2,17 @@
 <% layout('layouts/layout') %>
 
 <% if(data.length) { %>
-  <table>
+  <table class="complex-table">
     <% data.forEach(function(item) { %>
-      <tr><td><%- item.name %></td><td><%- item.catchPhrase %></td><tr>
+      <tr>
+        <td><%- item.name %></td>
+        <td><%- item.catchPhrase %></td>
+        <td><%- item.avatar %></td>
+        <td><%- item.image %></td>
+        <td><%- item.animal %></td>
+        <td><%- item.company %></td>
+        <td><%- item.quote %></td>
+      <tr>
     <% }) %>
   </table>
 <% } else { %>

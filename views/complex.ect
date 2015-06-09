@@ -2,9 +2,19 @@
 <% extend 'layouts/layout.ect' %>
 
 <% if @data?.length : %>
-  <% for item in @data : %>
-    <p><%- item.name %> - <%- item.catchPhrase %></p>
-  <% end %>
+  <table class="complex-table">
+    <% for item in @data : %>
+      <tr>
+        <td><%- item.name %></td>
+        <td><%- item.catchPhrase %></td>
+        <td><%- item.avatar %></td>
+        <td><%- item.image %></td>
+        <td><%- item.animal %></td>
+        <td><%- item.company %></td>
+        <td><%- item.quote %></td>
+      <tr>
+    <% end %>
+  </table>
 <% else : %>
   <p>List is empty</p>
 <% end %>

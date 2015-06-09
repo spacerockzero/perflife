@@ -35,8 +35,8 @@ router.get('/new', function(req, res){
       image: faker.image.image(),
       animal: faker.image.animals(),
       catchPhrase: faker.company.catchPhrase(),
-      company: faker.company.companyName(),
-      quote: faker.lorem.paragraphs()
+      company: faker.company.companyName()
+      // quote: faker.lorem.paragraphs()
     });
     i++;
   }
