@@ -5,21 +5,23 @@
 require('serviceworker-cache-polyfill');
 
 
-var version = 'v2';
+var version = 'v18';
+console.log('version:', version);
 var staticCacheName = 'people-static-' + version;
 
 
 self.oninstall = function(event) {
+  // debugger;
   self.skipWaiting();
 
   event.waitUntil(
     caches.open(staticCacheName).then(function(cache){
       return cache.addAll([
-        '../',
-        './css/all.js',
-        './js/page.js',
-        './img/apple-touch-icon.png',
-        './img/icon.png'
+        // './',
+        './_dist/css/all.css',
+        './_dist/js/page.js',
+        './_dist/img/apple-touch-icon.png'
+        // './_dist/img/icon.png'
       ]);
     })
   );
@@ -34,6 +36,7 @@ var expectedCaches = [
 
 
 self.onactivate = function(event) {
+  // debugger;
   if (self.clients && clients.claim) {
     clients.claim();
   }
@@ -54,5 +57,10 @@ self.onactivate = function(event) {
 
 
 self.onfetch = function(event) {
-  var requestURL = new URL(event.request.url);
-}
+  // debugger;
+  event.respondWith(
+    caches.match(event.request).then(function(response) {
+      return response || fetch(event.request);
+    })
+  );
+};

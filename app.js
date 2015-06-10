@@ -9,7 +9,7 @@ var ECT = require('ect');
 var ejsEngine = require('ejs-locals');
 
 
-var favicon = require('serve-favicon');
+// var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -70,7 +70,7 @@ switch (process.env.TEMPLATE) {
 
 
 // uncomment after placing your favicon in /public
-app.use(favicon(path.join(__dirname, '/assets/_dist/img/icon.png')));
+// app.use(favicon(path.join(__dirname, '/assets/_dist/img/icon.png')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
