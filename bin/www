@@ -1,16 +1,12 @@
 #!/usr/bin/env node
 
-'use strict';
 /**
  * Module dependencies.
  */
 
 var app = require('../app');
 var debug = require('debug')('perflife:server');
-// var http = require('http');
-var http2 = require('http2');
-var fs = require('fs');
-var path = require('path');
+var http = require('http');
 
 /**
  * Get port from environment and store in Express.
@@ -23,29 +19,15 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-// var server = http.createServer(app);
-var options = {
-  key: fs.readFileSync(path.join(__dirname, '../keys/server.key')),
-  cert: fs.readFileSync(path.join(__dirname, '../keys/server.crt')),
-  // ca: fs.readFileSync(path.join(__dirname, '../keys/server.csr')),
-
-  // **optional** SPDY-specific options
-  windowSize: 1024 * 1024, // Server's window size
-
-  // **optional** if true - server will send 3.1 frames on 3.0 *plain* spdy
-  autoSpdy31: false
-};
-var server = http2.createServer(options, app);
+var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(app.get('port'), function() {
-  console.log('Express server listening on port ' + app.get('port'));
-});
-// server.on('error', onError);
-// server.on('listening', onListening);
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
