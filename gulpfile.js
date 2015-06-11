@@ -59,11 +59,11 @@ function createBundler(src) {
     });
   }
   b.transform(hbsfy);
-  if (plugins.util.env.production) {
+  // if (plugins.util.env.production) {
     b.transform({
       global: true
     }, 'uglifyify');
-  }
+  // }
   b.add(src);
   return b;
 }

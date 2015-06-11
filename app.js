@@ -22,6 +22,7 @@ var api = require('./routes/api');
 
 var app = express();
 
+
 // TODO: change this to detect node env
 var isProduction = false;
 
