@@ -142,7 +142,7 @@
 
     & .photo-fader {
       opacity: 0;
-      @include transition(opacity 0.2s ease-out);
+      @include transition(opacity 0.1s ease-out);
 
       &.loaded {
         opacity: 1;

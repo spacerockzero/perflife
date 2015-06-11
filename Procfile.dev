@@ -1,2 +1,2 @@
-web: ./node_modules/.bin/nodemon ./bin/www
+web: npm start
 gulp: gulp serve
