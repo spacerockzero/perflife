@@ -1,0 +1,25 @@
+<!-- index.ect -->
+<% extend 'layouts/layout.ect' %>
+<% include 'toolbox/links' %>
+<div class="photos">
+  <% if @data?.length : %>
+    <p>photos:</p>
+    <% for item in @data : %>
+    <article class="photo">
+      <h1>
+        <a href="<%- item.url %>">
+          <span class="main-photo">
+            <span class="photo-fader loaded">
+              <img src="<%- item.thumbnailUrl  %>" alt="" class="main-photo-img">
+            </span>
+          </span>
+          <span class="title"><%- item.title %></span>
+        </a>
+      </h1>
+    </article>
+    <% end %>
+  <% else : %>
+    <p>List is empty</p>
+  <% end %>
+</div>
+<script src="/_dist/js/page2.js"></script>

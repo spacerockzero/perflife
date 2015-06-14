@@ -7,8 +7,8 @@ var buffer = require('vinyl-buffer');
 var runSequence = require('run-sequence');
 var source = require('vinyl-source-stream');
 // images bits
-// var imagemin = require('gulp-imagemin');
-// var pngquant = require('imagemin-pngquant');
+var imagemin = require('gulp-imagemin');
+var pngquant = require('imagemin-pngquant');
 var browserSync = require('browser-sync');
 // css bits
 var sass = require('gulp-sass');
@@ -23,17 +23,17 @@ var hbsfy = require('hbsfy');
 var reload = browserSync.reload;
 
 gulp.task('clean', function (done) {
-  require('del')(['./assets/_dist'], done);
+  require('del')(['./assets/_dist/'], done);
 });
 
 gulp.task('images', function(){
-  return gulp.src('assets/img/*')
+  return gulp.src('assets/img/**/*')
     // imagemin is broken somehow
-    // .pipe(imagemin({
-    //     progressive: true,
-    //     svgoPlugins: [{removeViewBox: false}],
-    //     use: [pngquant()]
-    // }))
+    .pipe(imagemin({
+        progressive: true,
+        svgoPlugins: [{removeViewBox: false}],
+        use: [pngquant()]
+    }))
     .pipe(gulp.dest('assets/_dist/img'));
 });
 
@@ -59,18 +59,20 @@ function createBundler(src) {
     });
   }
   b.transform(hbsfy);
-  // if (plugins.util.env.production) {
+  if (plugins.util.env.production) {
     b.transform({
       global: true
     }, 'uglifyify');
-  // }
+  }
   b.add(src);
   return b;
 }
 
 var bundlers = {
   '_dist/js/page.js': createBundler('./assets/js/page/index.js'),
-  'sw.js': createBundler('./assets/js/sw/index.js')
+  'sw.js': createBundler('./assets/js/sw/index.js'),
+  '_dist/js/page2.js': createBundler('./assets/js/page2/index.js'),
+  'sw2.js': createBundler('./assets/js/sw2/index.js')
 };
 
 function bundle(bundler, outputPath) {
@@ -83,9 +85,9 @@ function bundle(bundler, outputPath) {
     .on('error', plugins.util.log.bind(plugins.util, 'Browserify Error'))
     .pipe(source(outputFile))
     .pipe(buffer())
-    // .pipe(plugins.sourcemaps.init({ loadMaps: true })) // loads map from browserify file
-    // .pipe(plugins.sourcemaps.write('./')) // writes .map file
-    // .pipe(plugins.size({ gzip: true, title: outputFile }))
+    .pipe(plugins.sourcemaps.init({ loadMaps: true })) // loads map from browserify file
+    .pipe(plugins.sourcemaps.write('./')) // writes .map file
+    .pipe(plugins.size({ gzip: true, title: outputFile }))
     .pipe(gulp.dest('./assets/' + outputDir))
     .pipe(reload({ stream: true }));
 }
@@ -97,6 +99,11 @@ gulp.task('js', function () {
       return bundle(bundlers[key], key);
     })
   );
+});
+
+gulp.task('migrate-sw-toolbox', function(){
+  return gulp.src('node_modules/sw-toolbox/sw-toolbox.*')
+    .pipe(gulp.dest('assets/_dist/js/'));
 });
 
 gulp.task('browser-sync', function () {
@@ -138,7 +145,7 @@ gulp.task('watch', function(){
 
 
 gulp.task('build', function() {
-  return runSequence('clean', ['css', 'images', 'js']);
+  return runSequence('clean', ['css', 'images', 'migrate-sw-toolbox', 'js']);
 });
 gulp.task('serve', ['build', 'browser-sync', 'watch']);
 gulp.task('default', ['build']);

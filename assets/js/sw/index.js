@@ -5,7 +5,7 @@
 /*serviceworker polyfill*/
 require('serviceworker-cache-polyfill');
 
-var version = 'v10';
+var version = 'v2';
 console.log('version:', version);
 var staticCacheName = 'photos-static-' + version;
 
@@ -56,27 +56,29 @@ self.onactivate = function(event) {
   );
 };
 
-
 self.onfetch = function(event) {
-  // var requestURL = new URL(event.request.url);
-  //
-  // if (requestURL.hostname === 'jsonplaceholder.typicode.com') {
-  //   event.respondWith(placeholdAPIResponse(event.request));
-  // }
-  // else if (requestURL.hostname === 'placehold.it') {
-  //   event.respondWith(placeholdImageResponse(event.request));
-  // }
-  // else {
+  var requestURL = new URL(event.request.url);
+  // // console.log('requestURL.pathname:', requestURL.pathname)
+  // // debugger;
+  if (/\api\/photos/.test(requestURL.pathname)) {
+    console.log('match: api data');
+    event.respondWith(apiResponse(event.request));
+  }
+  else if (/\img\/api/.test(requestURL.pathname)) {
+    console.log('match: profile img');
+    event.respondWith(imgResponse(event.request));
+  }
+  else {
     event.respondWith(
       caches.match(event.request).then(function(response) {
         return response || fetch(event.request);
       })
     );
-  // }
+  }
 };
 
 
-function placeholdAPIResponse(request) {
+function apiResponse(request) {
   if (request.headers.get('x-use-cache-only')) {
     return caches.match(request);
   }
@@ -111,7 +113,7 @@ function placeholdAPIResponse(request) {
   });
 }
 
-function placeholdImageResponse(request) {
+function imgResponse(request) {
   return caches.match(request).then(function(response) {
     if (response) {
       return response;

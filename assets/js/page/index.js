@@ -53,21 +53,21 @@ function updatePage(data) {
 }
 
 function getFakeData() {
-  return photos.search(searchTerm, {
-    headers: {}
-  }).catch(function() {
+  return photos.search(searchTerm).catch(function(err) {
+    console.error('ERR: getFakeData', err);
     return null;
   });
 }
 
 function getCachedFakeData() {
-  if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+  if ('serviceWorker' in navigator) {
     return photos.search(searchTerm, {
-      headers: {'x-use-cache-only': '1'}
-    })
-    .catch(function() {
-      return null;
-    });
+        headers: {'x-use-cache-only': '1'}
+      })
+      .catch(function(err) {
+        console.error('ERR: getCachedFakeData',err);
+        return null;
+      });
   }
   else {
     return Promise.resolve(null);
@@ -77,7 +77,7 @@ function getCachedFakeData() {
 function showMessage(msg, duration) {
   msgContentEl.textContent = msg;
   msgEl.style.display = 'block';
-  msgEl.offsetWidth;
+  msgEl.offsetWidth; // repaint hack
   msgEl.classList.add('show');
   setTimeout(function() {
     msgEl.classList.remove('show');
@@ -85,11 +85,11 @@ function showMessage(msg, duration) {
 }
 
 function showConnectionError() {
-  showMessage("Currently offline!", 5000);
+  showMessage('Currently offline!', 5000);
 }
 
 var liveDataFetched = getFakeData().then(function(data) {
-  if (!data) return false;
+  if (!data) { return false; }
 
   var alreadyRendered = !!photoIDsDisplayed;
   var oldLen = photoIDsDisplayed && photoIDsDisplayed.length;
@@ -101,7 +101,7 @@ var liveDataFetched = getFakeData().then(function(data) {
 });
 
 var cachedDataFetched = getCachedFakeData().then(function(data) {
-  if (!data) return false;
+  if (!data) { return false; }
   if (!photoIDsDisplayed) {
     updatePage(data);
   }
