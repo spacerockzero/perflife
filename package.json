@@ -43,7 +43,7 @@
     "gulp-uglifyjs": "^0.6.2",
     "gulp-util": "^3.0.4",
     "gulp-watch": "^4.2.4",
-    "handlebars": "^3.0.1",
+    "handlebars": "^4.5.3",
     "hbsfy": "^2.2.1",
     "imagemin-pngquant": "^4.1.0",
     "merge-stream": "^0.1.7",
